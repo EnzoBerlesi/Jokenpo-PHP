@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jokenpo</title>
+<style>
+    body {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+    }
+    h1, h2 {
+        color: #ecf0f1;
+    }
+    button {
+        font-size: 18px;
+        padding: 10px 20px;
+        margin: 10px;
+        cursor: pointer;
+        background-color: #3498db;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #2980b9;
+    }
+    #resultado {
+        margin-top: 20px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #e74c3c;
+    }
+</style>
+</head>
+<body>
+
+<h1>Jokenpo</h1>
+
+<div>
+    <h2>Jogador 1</h2>
+    <button onclick="escolher('jogador1', 'Pedra')">Pedra</button>
+    <button onclick="escolher('jogador1', 'Papel')">Papel</button>
+    <button onclick="escolher('jogador1', 'Tesoura')">Tesoura</button>
+</div>
+
+<div>
+    <h2>Jogador 2</h2>
+    <button onclick="escolher('jogador2', 'Pedra')">Pedra</button>
+    <button onclick="escolher('jogador2', 'Papel')">Papel</button>
+    <button onclick="escolher('jogador2', 'Tesoura')">Tesoura</button>
+</div>
+
+<div id="resultado"></div>
+
+<script>
+    let escolhas = {
+        jogador1: "",
+        jogador2: ""
+    };
+
+    function escolher(jogador, escolha) {
+        escolhas[jogador] = escolha;
+        if (escolhas.jogador1 !== "" && escolhas.jogador2 !== "") {
+            enviarEscolhas();
+        }
+    }
+
+    function enviarEscolhas() {
+        let formData = new FormData();
+        formData.append('jogador1', escolhas.jogador1);
+        formData.append('jogador2', escolhas.jogador2);
+
+        fetch('jokenpo.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(resultado => {
+            document.getElementById('resultado').innerText = resultado;
+            escolhas.jogador1 = "";
+            escolhas.jogador2 = "";
+        });
+    }
+</script>
+
+</body>
+</html>
